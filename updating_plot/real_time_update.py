@@ -10,7 +10,7 @@ increment_amount = [i for i in range(1, 4)]
 print(increment_amount)
 
 x = [1, 2, 3]
-y = [1, 1, 1]
+y = [0, 0, 0]
 
 doc = curdoc()
 source = ColumnDataSource(data=dict(x=x, y=y))
@@ -31,6 +31,7 @@ def non_blocking_new_data():
 # @gen.coroutine
 def update_plot(x, y):
     source.stream(new_data=dict(x=x, y=y), rollover=3)
+    # TODO: Convert to patch instead -> rollover doesn't make sense in this example's context.
 
 
 p = figure()
@@ -40,6 +41,3 @@ doc.add_root(p)
 
 thread = Thread(target=non_blocking_new_data)
 thread.start()
-
-
-# bokeh serve --show updating_plot\real_time_update.py

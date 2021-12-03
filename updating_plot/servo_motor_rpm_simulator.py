@@ -1,6 +1,6 @@
 # RPM capped between 3k and 5k.
 # Starting RPM at 4k.
-# Increments or decrements between 3 and 10 rotations every quarter of a second.
+# Increments or decrements between 3 and 10 rotations every 100ms.
 
 
 from bokeh.models import ColumnDataSource
@@ -15,7 +15,7 @@ UPPER_LIMIT = 5000
 LOWER_LIMIT = 3000
 CURRENT_RPM = 4000
 TIME_SERIES_POINT = 0
-TIME_INCREMENT = 0.1
+SAMPLE_RATE = 0.1
 
 
 def instantiate_graph():
@@ -29,9 +29,9 @@ def instantiate_graph():
 
 def update_document(new_rpm_value, source):
     # print(source.data)
-    print(100/TIME_INCREMENT, type(100/TIME_INCREMENT))
-    rollover = int(100/TIME_INCREMENT) # TODO: Float to int rounds value. Need to make sure sampling is accurate.
-    source.stream(new_data=dict(x=[source.data['x'][-1]+TIME_INCREMENT], y=[new_rpm_value]), rollover=rollover)
+    print(100 / SAMPLE_RATE, type(100 / SAMPLE_RATE))
+    rollover = int(100 / SAMPLE_RATE) # TODO: Float to int rounds value. Need to add constrant for sampling accuracy.
+    source.stream(new_data=dict(x=[source.data['x'][-1] + SAMPLE_RATE], y=[new_rpm_value]), rollover=rollover)
 
 
 def change_rpm_by(value):
@@ -51,7 +51,7 @@ def run_motor_sim_and_update_doc(doc, source):
         change_rpm_by(rpm_change_value * rpm_change_direction)
         print(f'New RPM is: {CURRENT_RPM}')
         doc.add_next_tick_callback(partial(update_document, CURRENT_RPM, source))
-        sleep(TIME_INCREMENT)
+        sleep(SAMPLE_RATE)
 
 
 document, source = instantiate_graph()
@@ -59,4 +59,5 @@ thread = Thread(target=partial(run_motor_sim_and_update_doc, document, source))
 thread.start()
 
 
+# bokeh serve --show updating_plot\servo_motor_rpm_simulator.py
 # TODO: On server shutdown, kill the process.
