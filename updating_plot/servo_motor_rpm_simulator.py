@@ -59,5 +59,4 @@ thread = Thread(target=partial(run_motor_sim_and_update_doc, document, source))
 thread.start()
 
 
-# bokeh serve --show updating_plot\servo_motor_rpm_simulator.py
 # TODO: On server shutdown, kill the process.
