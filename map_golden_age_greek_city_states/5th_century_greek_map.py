@@ -20,14 +20,14 @@ output_file("5th_century_greek_map.html")
 provider = get_provider(ESRI_IMAGERY)
 
 # TODO: Set figure width and height relative to window size.
-plot = figure(x_range=(x_1, x_2), y_range=(y_1, y_2), x_axis_type="mercator", y_axis_type="mercator", width=1700, height=950)
+plot = figure(x_range=(x_1, x_2), y_range=(y_1, y_2), x_axis_type="mercator", y_axis_type="mercator",
+              width=1700, height=950, active_scroll='wheel_zoom')
 plot.add_tile(provider)
 
 
-# Adding highlight:
+# Adding areas highlight:
 spartan_area = json.dumps(load_mercator_data_from_file('sparta'))
 spartan_geo_data = GeoJSONDataSource(geojson=spartan_area)
-# plot.patches('xs', 'ys', source=spartan_geo_data)
 plot.patches('xs', 'ys', fill_alpha=0.5, line_color='white', line_width=0.5, source=spartan_geo_data)
 
 
