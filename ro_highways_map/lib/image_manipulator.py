@@ -8,19 +8,17 @@ class ImageManipulator:
         self.img_path = f'{folder}/{file}'
         self.file = file
         self.name = name
-        self.images = []
+        self.image = None
         self._load_base_image()
 
     def _load_base_image(self):
+        # TODO: If rgb_img is None raise exception for failing to load.
         rgb_img = cv2.imread(self.img_path)
-        self.images.append(rgb_img)
-        # hsv = cv2.cvtColor(rgb_img, cv2.COLOR_BGR2HSV)
-        # self.images.append(hsv)
+        self.image = rgb_img
 
     def render_image_and_log_pixel_colors_on_click(self):
-        for image in self.images:
-            cv2.imshow(self.name, image)
-        cv2.setMouseCallback(self.name, self._log_pixel_colors, self.images[0])
+        cv2.imshow(self.name, self.image)
+        cv2.setMouseCallback(self.name, self._log_pixel_colors, self.image)
         cv2.waitKey(0)
 
     def _log_pixel_colors(self, event, x, y, flags, image):
@@ -32,12 +30,22 @@ class ImageManipulator:
     @staticmethod
     def _convert_pixel_rgb_to_hsv(pixel_rgb):
         hsv_color_values = cv2.cvtColor(np.uint8([[pixel_rgb]]), cv2.COLOR_BGR2HSV)
-        return hsv_color_values[0][0]
+        return hsv_color_values[0][0]  # Converts back from 3D matrix to 1D.
 
     def print_img_properties(self, print_matrix=False):
-        for image in self.images:
-            print(f'Image shape: {image.shape}')
-            print(f'Image size: {image.size}')
-            if print_matrix:
-                pprint(image.tolist(), width=10000)
-                print(len(image), len(image[0]), len(image[0][0]))
+        print(f'Image shape: {self.image.shape}')
+        print(f'Image size: {self.image.size}')
+        if print_matrix:
+            pprint(self.image.tolist(), width=10000)
+            print(len(self.image), len(self.image[0]), len(self.image[0][0]))
+
+    def isolate_img_features(self, lower_hsv_bound, upper_hsv_bound):
+        # Convert image to HSV and generate mask based on bounds.
+        hsv_img = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
+        lower_hsv_bound = np.uint8(lower_hsv_bound)
+        upper_hsv_bound = np.uint8(upper_hsv_bound)
+        mask_img = cv2.inRange(hsv_img, lower_hsv_bound, upper_hsv_bound)
+        # Merge mask with rgb image to mask all areas of disinterest.
+        isolated_features_img = cv2.bitwise_and(self.image, self.image, mask=mask_img)
+        cv2.imshow('isolated_features_img', isolated_features_img)
+        cv2.waitKey(0)
