@@ -19,20 +19,24 @@ hsv = cv2.cvtColor(rgb_img, cv2.COLOR_BGR2HSV)
 # upper_green = np.array([60, 255, 255])
 
 # https://stackoverflow.com/questions/48109650/how-to-detect-two-different-colors-using-cv2-inrange-in-python-opencv
+# lower_green = np.array([60, 120, 120])
+# upper_green = np.array([70, 255, 255])
+
+
 lower_green = np.array([60, 120, 120])
-upper_green = np.array([70, 255, 255])
+upper_green = np.array([60, 255, 255])
 
 mask = cv2.inRange(hsv, lower_green, upper_green)
 
-green = np.uint8([[[0,255,0 ]]])
+green = np.uint8([[[0, 128, 0]]])
 hsv_green = cv2.cvtColor(green, cv2.COLOR_BGR2HSV)
-print(hsv_green)
+print(f'HSV conversion: {hsv_green}')
 
 res = cv2.bitwise_and(rgb_img, rgb_img, mask=mask)
 
 cv2.imshow('rgb_img', rgb_img)
 cv2.imshow('mask', mask)
-# cv2.imshow('res', res)
+cv2.imshow('res', res)
 
 cv2.setMouseCallback('rgb_img', log_pixel_color, rgb_img)
 
