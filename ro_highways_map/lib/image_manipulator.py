@@ -6,6 +6,7 @@ from pprintpp import pprint
 class ImageManipulator:
     def __init__(self, folder, file, name):
         self.img_path = f'{folder}/{file}'
+        self.folder = folder
         self.file = file
         self.name = name
         self.image = None
@@ -39,16 +40,20 @@ class ImageManipulator:
             pprint(self.image.tolist(), width=10000)
             print(len(self.image), len(self.image[0]), len(self.image[0][0]))
 
-    def isolate_img_features(self, lower_hsv_bound, upper_hsv_bound):
+    def isolate_img_features(self, lower_hsv_bound, upper_hsv_bound, render=False):
         # Convert image to HSV and generate mask based on bounds.
+        mask_img = self.generate_mask_from_hsv_bounds(lower_hsv_bound, upper_hsv_bound)
+        cv2.imwrite(f'{self.folder}/mask_{self.file}', mask_img)
+        # Merge mask with rgb image to mask all areas of disinterest.
+        isolated_features_img = cv2.bitwise_and(self.image, self.image, mask=mask_img)
+        cv2.imwrite(f'{self.folder}/processed_{self.file}', isolated_features_img)
+        if render:
+            cv2.imshow('isolated_features_img', isolated_features_img)
+            cv2.waitKey(0)
+
+    def generate_mask_from_hsv_bounds(self, lower_hsv_bound, upper_hsv_bound):
         hsv_img = cv2.cvtColor(self.image, cv2.COLOR_BGR2HSV)
         lower_hsv_bound = np.uint8(lower_hsv_bound)
         upper_hsv_bound = np.uint8(upper_hsv_bound)
-        mask_img = cv2.inRange(hsv_img, lower_hsv_bound, upper_hsv_bound)
-        # Merge mask with rgb image to mask all areas of disinterest.
-        isolated_features_img = cv2.bitwise_and(self.image, self.image, mask=mask_img)
-        cv2.imshow('isolated_features_img', isolated_features_img)
-        cv2.waitKey(0)
-        # TODO: Save image with same file name.
+        return cv2.inRange(hsv_img, lower_hsv_bound, upper_hsv_bound)
 
-# TODO: cleanup old codebase.
