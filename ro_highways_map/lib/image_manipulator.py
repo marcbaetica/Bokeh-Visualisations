@@ -49,3 +49,6 @@ class ImageManipulator:
         isolated_features_img = cv2.bitwise_and(self.image, self.image, mask=mask_img)
         cv2.imshow('isolated_features_img', isolated_features_img)
         cv2.waitKey(0)
+        # TODO: Save image with same file name.
+
+# TODO: cleanup old codebase.
