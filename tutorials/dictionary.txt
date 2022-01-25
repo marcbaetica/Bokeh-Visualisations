@@ -1,0 +1,1 @@
+glyphs = the various types of visual shapes that can be drawin in Bokeh (lines, bars, patches, hex tiles, etc);
