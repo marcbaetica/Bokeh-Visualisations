@@ -1,5 +1,4 @@
 import pandas as pd
-from pprintpp import pprint
 
 
 def read_csv_data_from_files(report_1, report_2):
@@ -17,6 +16,8 @@ def read_csv_data_from_files(report_1, report_2):
         y.append(extract_average_time_for_action(action, actions_column, report_1_data, average_time_column))
         x.append((action, '2'))
         y.append(extract_average_time_for_action(action, actions_column, report_2_data, average_time_column))
+    return x, y
+
 
 def retrieve_actions_list_from_report(report, actions_column):
     if actions_column not in report.keys():
@@ -33,6 +34,4 @@ def verify_reports_have_same_actions(actions_report_1, actions_report_2):
 
 def extract_average_time_for_action(action, actions_column, report_df, average_time_column):
     report_df = report_df[report_df[actions_column] == action]
-    pprint(list(report_df.iterrows()))
-    pprint(next(report_df.iterrows())[1][average_time_column])
-    print()
+    return next(report_df.iterrows())[1][average_time_column]  # Form of: 6.3e-05
