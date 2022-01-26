@@ -6,14 +6,8 @@ from lib.data_extraction import read_csv_data_from_files
 from pprintpp import pprint
 
 
-pprint(sys.argv)
 REPORT_1 = sys.argv[1]
 REPORT_2 = sys.argv[2]
 
-
 x, y = read_csv_data_from_files(REPORT_1, REPORT_2)
-
-pprint(x)
-pprint(y)
-
 generate_multi_plot_bar_graph(x, y)
