@@ -1,10 +1,11 @@
-from bokeh.io import show
+from bokeh.io import show, output_file
 from bokeh.models import ColumnDataSource, FactorRange, HoverTool
 from bokeh.plotting import figure
 from bokeh.transform import factor_cmap
 
 
-def generate_multi_plot_bar_graph(x, y):
+def generate_multi_plot_bar_graph(x, y, report_file_name):
+    output_file(report_file_name)
     source = ColumnDataSource(data={'x': x, 'y': y})
     plot = figure(x_range=FactorRange(*x), width=1000, active_scroll='wheel_zoom', title='DSA Performance Results Comparison')
     plot.left[0].formatter.use_scientific = False

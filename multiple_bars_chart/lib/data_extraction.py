@@ -1,4 +1,5 @@
 import pandas as pd
+from collections import Counter
 
 
 def read_csv_data_from_files(report_1, report_2):
@@ -24,13 +25,13 @@ def extract_average_time_for_action(action, actions_column, report, average_time
     verify_column_exists_in_report(report, actions_column)
     verify_column_exists_in_report(report, average_time_column)
     report_df = report[report[actions_column] == action]
-    return next(report_df.iterrows())[1][average_time_column]  # Form of: 6.3e-05
+    return next(report_df.iterrows())[1][average_time_column]
 
 
 def verify_reports_have_same_actions(report_1_data, report_2_data, actions_column):
     actions_report_1 = retrieve_actions_list_from_report(report_1_data, actions_column)
     actions_report_2 = retrieve_actions_list_from_report(report_2_data, actions_column)
-    if actions_report_1 != actions_report_2:
+    if Counter(actions_report_1) != Counter(actions_report_2):
         raise ValueError('The two reports have different actions. Comparison is not possible.\n'
                          f' Report 1 actions: {actions_report_1}\n Report 2 actions: {actions_report_2}')
 
