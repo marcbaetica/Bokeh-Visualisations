@@ -9,7 +9,7 @@ AVERAGE_TIME_COLUMN = 'AVERAGE_TIME_IN_SECONDS'
 COUNT_COLUMN = 'COUNT'
 
 
-def read_csv_data_from_reports(folder):
+def parse_data_from_csv_reports(folder):
     reports_data = []
     parsed_reports_data = []
     csv_reports_files = os.listdir(folder)
@@ -25,7 +25,7 @@ def read_csv_data_from_reports(folder):
         for action in actions:
             report_dict[action] = extract_average_time_for_action(action, report_data)
         parsed_reports_data.append(report_dict)
-    return parsed_reports_data
+    return parsed_reports_data, actions
 
 
 def retrieve_actions_list_from_report(report, actions_column):

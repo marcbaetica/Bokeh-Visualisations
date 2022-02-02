@@ -1,5 +1,6 @@
 import sys
-from lib.csv_data_extraction import read_csv_data_from_reports
+from lib.bar_chart import generate_multi_plot_bar_graph
+from lib.csv_data_extraction import parse_data_from_csv_reports
 from pprintpp import pprint
 
 
@@ -10,5 +11,5 @@ except IndexError:
           ' Example: python generate_reports_graph.py samples')
     sys.exit(1)
 
-reports_data = read_csv_data_from_reports(REPORTS_FOLDER)
-pprint(reports_data)
+reports_data, actions = parse_data_from_csv_reports(REPORTS_FOLDER)
+generate_multi_plot_bar_graph(reports_data, actions, 'performance_per_action_report_graph.html')
