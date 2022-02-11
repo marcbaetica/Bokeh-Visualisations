@@ -1,18 +1,19 @@
 from flask import Flask, render_template
-from bokeh.resources import INLINE
 from bokeh.embed import components
+from bokeh.resources import INLINE
+from movies_ratings import generate_bokeh_plot
 
 app = Flask('bokeh_graph')
 
+# plot = generate_bokeh_plot()
+# script, div = components(plot)
+# show(plot)
 
-# @app.route('/')
-# def main_page():
-#     return render_template('index.html')
-
-script, div = components(fig)
 
 @app.route('/')
-def main_page():
+def index():
+    plot = generate_bokeh_plot()
+    script, div = components(plot)
     return render_template(
         'index.html',
         plot_script=script,
