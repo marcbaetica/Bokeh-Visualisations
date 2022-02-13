@@ -1,4 +1,4 @@
-from flask import Flask, redirect
+from flask import Flask, redirect, jsonify
 from random import randint
 from threading import Thread
 from time import sleep
@@ -29,12 +29,16 @@ def index():
     return redirect('random-number-generator')
 
 
-@app.route('/random-number-generator')
+@app.route('/random-number-generator', methods=['GET', 'OPTIONS'])  # OPTIONS call due to CURS regardless of client setting.
 def generate_number():
     # return f"""<html><body>{randint(1, 20)}</body><html>"""
     # return f'{randint(1, 20)}'  # Same thing.
     # return randint(1, 20)  # Doesn't work.
-    return f'{payload}'
+    # return f'{randint(1, 20)}'  # Works.
+    res = jsonify(payload)
+    res.headers.add('Access-Control-Allow-Origin', '*')
+    res.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    return res
 
 
 app.run()
