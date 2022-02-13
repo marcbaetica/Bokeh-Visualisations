@@ -1,4 +1,4 @@
-from bokeh.io import show, output_file
+from bokeh.io import output_file
 from bokeh.models import ColumnDataSource
 from bokeh.plotting import figure
 from pprintpp import pprint
@@ -25,7 +25,5 @@ def generate_bokeh_plot():
     plot.circle(x='imdb_ratings', y='rt_ratings', color='colors', source=source)
     plot.xaxis.axis_label = 'IMDB Rating'
     plot.yaxis.axis_label = 'Rotten Tomatoes Rating'
-
-    print(source.data['colors'])
     output_file('movies_ratings.html')
     return plot
